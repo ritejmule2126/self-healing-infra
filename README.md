@@ -229,7 +229,7 @@ The entire project runs from a single **EC2 Ubuntu 22.04 (t3.xlarge)** server. Y
 
 ### Screenshot 01 — EC2 Ubuntu Server Running
 
-![EC2 Server Running](screenshots/01-ec2-server-running.png)
+![EC2 Server Running](screenshots/01-ec2-server.png)
 
 > EC2 instance `self-healing-workspace` (t3.xlarge, Ubuntu 22.04) showing `Instance State: Running` with `2/2 status checks passed`.
 
@@ -269,7 +269,7 @@ terraform apply -auto-approve
 
 ### Screenshot 04 — kubectl get nodes (3 Ready)
 
-![kubectl get nodes](screenshots/04-kubectl-get-nodes.png)
+![kubectl get nodes](screenshots/04-kubectl-nodes.png)
 
 > All 3 worker nodes showing `STATUS: Ready` after connecting kubectl with `aws eks update-kubeconfig`.
 
@@ -294,7 +294,7 @@ Deployment features:
 
 ### Screenshot 05 — Docker Push Successful
 
-![Docker Push](screenshots/05-docker-push-success.png)
+![Docker Push](screenshots/05-docker-push.png)
 
 > `docker push` complete — `self-healing-api:v1` digest SHA printed, image live on Docker Hub.
 
@@ -302,7 +302,7 @@ Deployment features:
 
 ### Screenshot 06 — Health Endpoint via Load Balancer
 
-![Health Endpoint](screenshots/06-curl-health-endpoint.png)
+![Health Endpoint](screenshots/06-app-health.png)
 
 > `curl http://<aws-load-balancer-url>/health` returning `{"service":"api","status":"healthy"}` — confirmed live from the AWS ELB endpoint.
 
@@ -310,7 +310,7 @@ Deployment features:
 
 ### Screenshot 07 — 3 API Pods Running
 
-![API Pods Running](screenshots/07-api-pods-running.png)
+![API Pods Running](screenshots/07-kubernetes-pods.png)
 
 > `kubectl get pods -n self-healing` showing all 3 API pods with `READY: 1/1` and `STATUS: Running`.
 
@@ -318,7 +318,7 @@ Deployment features:
 
 ### Screenshot 08 — HPA Configured (2–8 Replicas)
 
-![HPA](screenshots/08-hpa-configured.png)
+![HPA](screenshots/08-hpa.png)
 
 > `kubectl get hpa -n self-healing` showing `MINPODS: 2`, `MAXPODS: 8`, CPU target `70%`, current replicas `3`.
 
@@ -360,7 +360,7 @@ python3 train_model.py     # Trains RandomForest, saves model.pkl + scaler.pkl
 
 ### Screenshot 10 — AI Training Output (100% Accuracy)
 
-![AI Training](screenshots/10-ai-training-100-accuracy.png)
+![AI Training](screenshots/12-ai-training.png)
 
 > Python training output showing `Accuracy: 100.00%` with full classification report — precision, recall, and f1-score at 1.00 for both the `0` (normal) and `1` (failure) classes.
 
@@ -368,7 +368,7 @@ python3 train_model.py     # Trains RandomForest, saves model.pkl + scaler.pkl
 
 ### Screenshot 11 — AI Predicts FAILURE (High CPU Scenario)
 
-![AI Failure Prediction](screenshots/11-ai-predict-failure.png)
+![AI Failure Prediction](screenshots/13-ai-prediction-failure.png)
 
 > POST request with `cpu_usage: 95, memory_usage: 92, error_rate: 14, response_time_ms: 2500` returns:
 > `{"failure_predicted": true, "failure_probability": 0.97, "recommendation": "HEAL"}`
@@ -377,16 +377,12 @@ python3 train_model.py     # Trains RandomForest, saves model.pkl + scaler.pkl
 
 ### Screenshot 12 — AI Predicts OK (Healthy Scenario)
 
-![AI Healthy Prediction](screenshots/12-ai-predict-healthy.png)
+![AI Healthy Prediction](screenshots/14-ai-prediction-healthy.png)
 
 > POST request with `cpu_usage: 22, memory_usage: 35, error_rate: 0.1, response_time_ms: 190` returns:
 > `{"failure_predicted": false, "failure_probability": 0.02, "recommendation": "OK"}`
 
 ---
-
-### Screenshot 13 — AI Docker Image Pushed
-
-![AI Docker Push](screenshots/13-ai-docker-push.png)
 
 > `self-healing-ai:v1` image — containing the trained model, prediction API, and auto-healer script — successfully pushed to Docker Hub.
 
@@ -403,7 +399,7 @@ kubectl apply -f k8s/auto-healer.yaml     # RBAC + healer deployment
 
 ### Screenshot 14 — AI Predictor Pod Running
 
-![AI Predictor Pod](screenshots/14-ai-predictor-pod-running.png)
+![AI Predictor Pod](screenshots/15-autohealer-deployed.png)
 
 > `kubectl get pods -n self-healing` showing `ai-predictor-xxxxx` with `READY: 1/1` and `STATUS: Running`.
 
@@ -411,7 +407,7 @@ kubectl apply -f k8s/auto-healer.yaml     # RBAC + healer deployment
 
 ### Screenshot 15 — All 5 Pods Running
 
-![All 5 Pods](screenshots/15-all-5-pods-running.png)
+![All 5 Pods](screenshots/15-autohealer-deployed.png)
 
 > Complete `self-healing` namespace: 3 API pods + 1 AI predictor + 1 auto-healer — all `Running`. The full self-healing stack is live.
 
@@ -419,7 +415,7 @@ kubectl apply -f k8s/auto-healer.yaml     # RBAC + healer deployment
 
 ### Screenshot 16 — Auto-Healer Logs (Active Polling)
 
-![Auto-Healer Logs](screenshots/16-auto-healer-logs.png)
+![Auto-Healer Logs](screenshots/16-autohealer-logs.png)
 
 > `kubectl logs -n self-healing -l app=auto-healer -f` showing the healer polling every 30 seconds:
 > `CPU=xx.x% MEM=xx.x%` → AI prediction → `OK` logged on each healthy cycle.
@@ -454,7 +450,7 @@ Push to master
 
 ### Screenshot 23 — GitHub Secrets Configured
 
-![GitHub Secrets](screenshots/23-github-secrets-configured.png)
+![GitHub Secrets](screenshots/23-github-secrets.png)
 
 > Repository Settings → Secrets and Variables → Actions showing all 5 secrets saved: `DOCKER_USERNAME`, `DOCKER_PASSWORD`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `KUBE_CONFIG`.
 
@@ -462,7 +458,7 @@ Push to master
 
 ### Screenshot 24 — GitHub Actions Workflow Running
 
-![GitHub Actions Running](screenshots/24-github-actions-running.png)
+![GitHub Actions Running](screenshots/24-github-actions-workflow.png)
 
 > Actions tab showing the workflow triggered immediately after a `git push origin master` — stages running with live status indicators.
 
@@ -470,7 +466,7 @@ Push to master
 
 ### Screenshot 25 — All Pipeline Stages Passed
 
-![Pipeline Stages](screenshots/25-github-actions-pipeline-stages.png)
+![Pipeline Stages](screenshots/25-github-actions-pipeline.png)
 
 > All 4 stages completed successfully: `build-test ✅` → `trivy-scan ✅` → `docker-push ✅` → `deploy-eks ✅`. New image deployed to EKS automatically.
 
@@ -482,7 +478,7 @@ Deliberately breaking the system to prove it heals itself.
 
 ### Screenshot 17 — All Pods Running (Before Chaos)
 
-![Before Chaos](screenshots/17-pods-before-deletion.png)
+![Before Chaos](screenshots/17-chaos-before.png)
 
 > Baseline state — 5 pods in `self-healing` namespace all `Running` before the chaos test begins.
 
@@ -490,7 +486,7 @@ Deliberately breaking the system to prove it heals itself.
 
 ### Screenshot 18 — Pod Deletion Command Executed
 
-![Delete Pod](screenshots/18-kubectl-delete-pod.png)
+![Delete Pod](screenshots/18-chaos-delete.png)
 
 > `kubectl delete pod <pod-name> -n self-healing` executed — a live API pod force-deleted to simulate an unexpected node failure.
 
@@ -498,7 +494,7 @@ Deliberately breaking the system to prove it heals itself.
 
 ### Screenshot 19 — Pod Terminating, Replacement Creating
 
-![Pod Recovering](screenshots/19-pod-terminating-new-creating.png)
+![Pod Recovering](screenshots/19-chaos-recovering.png)
 
 > Kubernetes responds instantly: the deleted pod shows `Terminating`, a new replacement pod shows `ContainerCreating` — self-healing in progress.
 
@@ -506,7 +502,7 @@ Deliberately breaking the system to prove it heals itself.
 
 ### Screenshot 20 — All Pods Recovered (Full Recovery)
 
-![Pods Recovered](screenshots/20-all-pods-back-running.png)
+![Pods Recovered](screenshots/20-chaos-running.png)
 
 > ~30 seconds after deletion: all pods back to `Running`. Zero manual intervention. Kubernetes replaced the pod automatically.
 
@@ -514,7 +510,7 @@ Deliberately breaking the system to prove it heals itself.
 
 ### Screenshot 21 — Auto-Healer AI Predictions During Chaos
 
-![Healer During Chaos](screenshots/21-auto-healer-predictions.png)
+![Healer During Chaos](screenshots/21-autohealer-predictions.png)
 
 > Auto-healer logs during the chaos test — showing elevated failure probability detected, healing action triggered, and confirmation of recovery on the next polling cycle.
 
@@ -528,7 +524,7 @@ chmod +x validate.sh && ./validate.sh
 
 ### Screenshot 22 — Validation 12/12 Passed
 
-![Validation Passed](screenshots/22-validation-12-passed.png)
+![Validation Passed](screenshots/22-validation-passed.png)
 
 > All 12 checks passed: cluster reachable, 3 nodes ready, all pods running, monitoring stack up, load balancer assigned, all API endpoints responding correctly.
 
